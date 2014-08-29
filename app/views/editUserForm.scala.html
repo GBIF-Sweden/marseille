@@ -1,0 +1,39 @@
+@(id: Long, userForm: Form[User])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@main("Edit user") {
+    
+    <h1>Edit user</h1>
+
+   	@if(flash.containsKey("error")) {
+        <div class="alert-message error">
+            <strong>Oops!</strong> @flash.get("error")
+        </div>
+    }    
+
+    @form(routes.Users.updateUser(id)) {
+
+    <fieldset>
+
+        @inputText(userForm("userName"), '_label -> "Username")
+        @inputText(userForm("email"), '_label -> "Email")
+        @inputText(userForm("confirmEmail"), '_label -> "Confirm Email")
+        @inputText(userForm("name"), '_label -> "Name")
+        @inputPassword(userForm("password"), '_label -> "Password")
+        @inputPassword(userForm("confirmPassword"), '_label -> "Confirm Password")
+		
+    </fieldset>
+    
+    <div class="actions">
+      <input type="submit" value="Save" class="btn btn-primary"> or <a href="@routes.Users.users()" class="btn">Cancel</a>
+    </div>
+        
+    }
+
+    @form(routes.Users.deleteUser(id), 'class -> "topRight") {
+        <input type="submit" value="Delete this user" class="btn btn-danger">
+    }    
+}

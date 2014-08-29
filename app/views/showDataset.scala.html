@@ -1,0 +1,36 @@
+@(dataset: Dataset, admin: Boolean)
+
+@import helper._
+@import myHelpers._
+
+@********************************
+ * Helper generating table rows *
+ ********************************@
+
+@main(dataset.name) {
+        @bandeau(dataset.name)
+	
+        <div class="container result-list">
+            @menu(admin)
+            <br>
+	@if(admin) {
+	<a class="btn success topRight" id="edit" href="@routes.Datasets.editDataset(dataset.id)">Edit this dataset</a>
+	}
+
+	<table class="table table-bordered table-striped table-condensed table-responsive">
+		@rowLink("GBIF UUID", "gbrdsuuid", "http://gbrds.gbif.org/browse/agent?uuid="+dataset.gbrdsID, dataset.gbrdsID)
+		@row("Institution / Organization", "organization", if(dataset.organization != null) dataset.organization.name else "-")
+		@row("Collection", "collection", if(dataset.collection != null) dataset.collection.name else "-" )
+		@row("Description", "description", dataset.description)
+		@row("Code", "code", dataset.code)
+		@rowLink("Home page", "homepage", dataset.webUrl, dataset.webUrl)
+		@rowLink("Access point", "accesspoint", dataset.wsUrl, dataset.wsUrl)
+		@row("Encoding","encoding",dataset.encoding)
+		@row("Number of records","nbrecords", dataset.nbOriginalRecords.toString())
+		@row("Administrative contact", "administrativecontact", dataset.administrativeContact)
+		@rowLink("Administrative email", "administrativeemail", "mailto:"+dataset.administrativeEmail, dataset.administrativeEmail)
+	</table>
+	<p class="journal">Created: @dataset.creationDate. Updated: @dataset.updateDate.</p>
+        
+        </div>
+}

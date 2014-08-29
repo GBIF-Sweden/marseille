@@ -1,0 +1,14 @@
+@(label: String, cls: String, txt: String)
+
+@***************************************
+* Generates table row with two columns *
+****************************************@
+<tr class="@cls">
+        <td>@label</td>
+        <td>@if(txt.length == 0) {
+                <em>-</em>
+                } else {
+                        @txt
+                }
+        </td>
+</tr>

@@ -1,0 +1,35 @@
+@(organization: Organization, admin: Boolean)
+
+@import helper._
+@import myHelpers._
+
+@********************************
+ * Helper generating table rows *
+ ********************************@
+
+@main(organization.name) {
+        @bandeau(organization.name)
+        
+        <div class="container result-list">	
+            @menu(admin)
+            <br>
+	@if(admin) {
+	<a class="btn success topRight" id="edit" href="@routes.Organizations.editOrganization(organization.id)">Edit this organization</a>
+	}
+	<table class="table table-bordered table-striped table-condensed table-responsive">
+		@rowLink("GBIF UUID", "gbrdsuuid", "http://gbrds.gbif.org/browse/agent?uuid="+organization.gbrdsID, organization.gbrdsID)
+		@rowLink("Biodiversity Collections Index ID", "bciid", "http://biocol.org/"+organization.bciID, organization.bciID)
+		@row("Address", "address", organization.address)
+		@row("Postal box", "postalbox", organization.postBox)
+		@row("Postal code", "postalcode", organization.postCode)
+		@row("City","city",organization.city)
+		@row("Country", "country", organization.country)
+		@rowLink("Home page", "homepage", organization.webUrl, organization.webUrl)
+		@row("Administrative contact","administrativecontact", organization.administrativeContact)
+		@rowLink("Administrative email", "administrativeemail", "mailto:"+organization.administrativeEmail,organization.administrativeEmail)
+		@row("Technical contact", "technicalcontact", organization.technicalContact)
+		@rowLink("Technical email", "technicalemail", "mailto:"+organization.technicalEmail,organization.technicalEmail)
+	</table>
+	<p class="journal">Created: @organization.creationDate. Updated: @organization.updateDate.</p>
+        </div>
+}

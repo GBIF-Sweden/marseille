@@ -1,0 +1,12 @@
+@(label: String, cls: String, url: String, txt: String)
+@**************************************************
+* Generates table row with two columns and a link *
+***************************************************@
+<tr class="@cls">
+        <td>@label</td>
+        <td>@if(txt.length == 0 || url.length == 0) {
+                <em>-</em>
+        } else {
+                <a href="@url" target="_blank">@txt</a>
+        }
+</tr>

@@ -1,0 +1,83 @@
+@(id: Long, collectioForm: Form[Collectio], collectio: Collectio, admin: Boolean)
+
+@import helper._
+@import myHelpers._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@title = @{if(id != null) {
+			"Edit a collection"
+		} else {
+			"Create a collection"
+		}}
+
+
+@main(title) {
+        @bandeau(title)
+        
+        <div class="container result-list">
+            @menu(admin)
+    @form(if(id != null) {    
+    		routes.Collectiones.updateCollectio(id)
+    	} else {
+    		routes.Collectiones.saveCollectio()
+    	}) {
+
+    <fieldset>
+    
+    	@select(collectioForm("organization.id"),
+    				options = options(Organization.names),
+    				'_default -> "--- Choose an organization ---",
+    				'_label -> "Organization", 'class -> "form-control"
+    		)
+        
+        @inputText(collectioForm("code"), '_label -> "Code", 'class -> "form-control") 
+        @inputText(collectioForm("name"), '_label -> "Name", 'class -> "form-control") 
+	@input(collectioForm("webUrl"), '_label -> "URL", 'class -> "form-control") { (id, name, value, args) =>
+			<input type="url" name="@name" id="@id" value="@value" @toHtmlArgs(args)>
+		} 
+        @inputText(collectioForm("bciID"), '_label -> "BCI ID", 'class -> "form-control")
+        @textarea(collectioForm("description"), '_label -> "Description", 'class -> "form-control") 
+        @input(collectioForm("numberSpecimens"), '_label -> "Estimated number of specimens", 'class -> "form-control"){ (id, name, value, args) =>
+			<input type="number" name="@name" id="@id" value="@value" min="0" @toHtmlArgs(args)>
+		} 
+        @input(collectioForm("numberDigitizedSpecimens"), '_label -> "Estimated number of digitized specimens", 'class -> "form-control"){ (id, name, value, args) =>
+			<input type="number" name="@name" id="@id" value="@value" min="0" @toHtmlArgs(args)>
+		} 
+        @input(collectioForm("numberObjects"), '_label -> "Estimated number of objects", 'class -> "form-control"){ (id, name, value, args) =>
+			<input type="number" name="@name" id="@id" value="@value" min="0" @toHtmlArgs(args)>
+		} 
+        @input(collectioForm("numberDigitizedObjects"), '_label -> "Estimated number of digitized objects", 'class -> "form-control"){ (id, name, value, args) =>
+			<input type="number" name="@name" id="@id" value="@value" min="0" @toHtmlArgs(args)>
+		} 
+        @input(collectioForm("earliestYear"),'_label -> "Start year", 'class -> "form-control"){ (id, name, value, args) =>
+			<input type="number" name="@name" id="@id" value="@value" min="0" @toHtmlArgs(args)>
+		} 
+        @input(collectioForm("latestYear"), '_label -> "End year", 'class -> "form-control"){ (id, name, value, args) =>
+			<input type="number" name="@name" id="@id" value="@value" min="0" @toHtmlArgs(args)>
+		} 
+        @textarea(collectioForm("expeditions"), '_label -> "Expeditions' specimens in the collection", 'class -> "form-control")
+        @textarea(collectioForm("remarkablePersons"), '_label -> "Remarkable contributors to the collection", 'class -> "form-control")
+        @inputText(collectioForm("administrativeContact"), '_label -> "Administrative Contact", 'class -> "form-control")
+        @input(collectioForm("administrativeEmail"), '_label -> "Administrative Email", 'class -> "form-control"){ (id, name, value, args) =>
+			<input type="email" name="@name" id="@id" value="@value" @toHtmlArgs(args)>
+		} 
+
+    </fieldset>
+
+    
+    <div class="actions">
+      <input type="submit" value="Save" class="btn btn-primary"> or <a href="@routes.Collectiones.collectiones()" class="btn btn-default">Cancel</a>
+    </div>
+        
+    }
+
+    @if(id != null) {
+	<p class="journal">Created: @collectio.creationDate. Updated: @collectio.updateDate.
+    	@form(routes.Collectiones.deleteCollectio(id), 'class -> "topRight") {
+        <input type="submit" value="Delete this collection" class="btn btn-danger" onclick="return confirm('Are you sure?')">
+    	}
+        </p>
+    }
+    </div>        
+}

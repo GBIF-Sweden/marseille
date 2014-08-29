@@ -1,0 +1,22 @@
+@(admin: Boolean)
+@*********************************************************
+* Generates a menu for accessing different kinds of data *
+**********************************************************@
+<div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-6">
+        <a href="@routes.Organizations.organizations()">Organizations</a>&nbsp;
+        <a href="@routes.Collectiones.collectiones()">Collections</a>&nbsp; 
+        <a href="@routes.Datasets.datasets()">Datasets</a>
+        @if(admin) {
+        &nbsp;<a href="@routes.Users.users()">Users</a>
+        }
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6 login">
+        @if(session.get("email")) {
+        Welcome <a href='@routes.Users.editUser(session.get("userid").toLong)'>@session.get("email")</a> 
+         | <a href="@routes.Application.logout()">Logout</a>
+        } else {
+        <a href="@routes.Application.login()">Login</a>
+        }
+    </div>
+</div>

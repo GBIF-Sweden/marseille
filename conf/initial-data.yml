@@ -1,0 +1,12 @@
+# Users
+
+users:
+
+    - !!models.User
+        id:         1
+        email:      admin@gbif.org
+        name:       admin
+        userName:   admin
+        # secret 'bcrypted'
+        password:   $2a$12$2DtbM/pTSc5HHmGdfB4En.NZCnhKpcx22PZoBnBDXYofPj203ohom
+        rights:     4

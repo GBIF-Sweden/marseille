@@ -1,0 +1,65 @@
+@(id: Long, userForm: Form[User], admin: Boolean, isSelf: Boolean)
+
+@import helper._
+@import myHelpers._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@title = @{if(id != null) {
+			"Edit an user"
+		} else {
+			"Create an user"
+		}}
+                
+@main(title) {
+        @bandeau(title)
+
+        <div class="container result-list">
+            @menu(admin)
+            
+    @form(if(id != null) {    
+    		routes.Users.updateUser(id)
+    	} else {
+    		routes.Users.saveUser()
+    	}) {            
+
+    <fieldset>
+
+        @inputText(userForm("userName"), '_label -> "Username")
+        
+        @if(id == null) {
+        @inputText(userForm("email"), '_label -> "Email")
+        @inputText(userForm("confirmEmail"), '_label -> "Confirm Email")
+        } else {
+        @inputText(userForm("email"), '_label -> "Email", 'readonly -> "readonly")
+        }
+        
+        @inputText(userForm("name"), '_label -> "Name")
+        @if((id == null) || isSelf) {
+            @inputPassword(userForm("password"), '_label -> "Password")
+            @inputPassword(userForm("confirmPassword"), '_label -> "Confirm Password")
+        }
+        
+        @if(admin) {
+            @select(userForm("rights"), options("1"->"User","4"->"Admin"), '_label -> "Rights")
+        }
+		
+    </fieldset>
+
+    
+    <div class="actions">
+      <input type="submit" value="Save" class="btn btn-primary"> or <a href="@routes.Users.users()" class="btn btn-default">Cancel</a>
+    </div>        
+        
+        }
+        
+
+        @if(id != null) {
+    	<p class="journal">@form(routes.Users.deleteUser(id), 'class -> "topRight") {
+        <input type="submit" value="Delete this user" class="btn btn-danger" onclick="return confirm('Are you sure?')">
+    	} 
+        </p>
+    }        
+    </div>
+        
+}

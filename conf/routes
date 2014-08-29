@@ -1,0 +1,92 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+# ~~~~~~~~~
+#GET     /                           controllers.Application.login()
+GET     /                           controllers.Datasets.datasets(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+
+# Authentication
+# ~~~~~~~~~~~~~~
+GET     /login                              controllers.Application.login()
+POST    /login                              controllers.Application.authenticate()
+GET     /logout                             controllers.Application.logout()
+
+# Organizations
+#~~~~~~~~~~~~~~
+# organization list
+GET		/organizations              controllers.Organizations.organizations(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+
+# new organization
+GET 	/organizations/new          controllers.Organizations.newOrganization()
+POST  	/organizations              controllers.Organizations.saveOrganization()
+
+# show organization
+GET 	/organizations/:id			controllers.Organizations.showOrganization(id: Long)
+
+# edit organization
+GET  	/organizations/:id/update 	controllers.Organizations.editOrganization(id: Long)
+POST 	/organizations/:id/update 	controllers.Organizations.updateOrganization(id: Long)
+
+#delete organization
+POST 	/organizations/:id/delete 	controllers.Organizations.deleteOrganization(id: Long)
+
+# Collections
+# ~~~~~~~~~~~
+# collection list
+GET 	/collections				controllers.Collectiones.collectiones(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+
+# new collection
+GET 	/collections/new 			controllers.Collectiones.newCollectio()
+POST 	/collections 				controllers.Collectiones.saveCollectio()
+
+# show collection
+GET		/collections/:id 			controllers.Collectiones.showCollectio(id: Long)
+
+# edit collection
+GET 	/collections/:id/update 	controllers.Collectiones.editCollectio(id: Long)
+POST 	/collections/:id/update 	controllers.Collectiones.updateCollectio(id: Long)
+
+# delete collection
+POST 	/collections/:id/delete 	controllers.Collectiones.deleteCollectio(id: Long)
+
+# Datasets 
+# ~~~~~~~~
+# dataset list
+GET     /datasets                   controllers.Datasets.datasets(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+
+# new dataset
+GET     /datasets/new               controllers.Datasets.newDataset()
+POST    /datasets                   controllers.Datasets.saveDataset()
+
+# show dataset
+GET     /datasets/:id				controllers.Datasets.showDataset(id: Long)
+
+# edit dataset
+GET     /datasets/:id/update        controllers.Datasets.editDataset(id: Long)
+POST    /datasets/:id/update        controllers.Datasets.updateDataset(id: Long)
+
+# delete dataset
+POST    /datasets/:id/delete        controllers.Datasets.deleteDataset(id: Long)
+
+# Users
+# ~~~~~
+# user list
+GET     /users                      controllers.Users.users(p:Int ?= 0, s ?= "userName", o ?= "asc", f ?= "")
+
+# new user
+GET     /users/new                  controllers.Users.newUser()
+POST    /users                      controllers.Users.saveUser()
+
+# edit user
+GET     /users/:id/update           controllers.Users.editUser(id: Long)
+POST    /users/:id/update           controllers.Users.updateUser(id: Long)
+
+# delete user
+POST    /users/:id/delete           controllers.Users.deleteUser(id: Long)
+
+# Other stuff
+# ~~~~~~~~~~~
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

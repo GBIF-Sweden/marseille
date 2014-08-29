@@ -1,0 +1,176 @@
+@(currentPage: com.avaje.ebean.Page[Dataset], currentSortBy: String, currentOrder: String, currentFilter: String, admin: Boolean)
+
+@import helper._
+@import myHelpers._
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.Datasets.datasets(newPage, sortBy, order, currentFilter)
+    
+}
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
+        <a href="@link(0, key)">@title</a>
+    </th>
+}
+
+@main("Dataset list") {
+        @bandeau(currentPage.getTotalRowCount+" dataset(s)")
+        
+        <div class="container result-list">
+            @menu(admin)
+            <br>
+            @if(flash.containsKey("success")) {
+	        <div class="alert alert-warning">
+	            <strong>Done!</strong> @flash.get("success")
+	        </div>
+	    } else { 
+	    	@if(flash.containsKey("error")) {
+		        <div class="alert alert-error">
+		            <strong>Oops!</strong> @flash.get("error")
+		        </div>
+		    }
+	    }     
+
+    <p id="actions">
+        
+        <form action="@link(0, "name")" method="GET">
+            <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by dataset name...">
+            <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary">
+        </form>
+        @if(admin) {
+        <br><a class="btn btn-success" id="add" href="@routes.Datasets.newDataset()">Add a new dataset</a>
+        }
+        
+    </p>
+    
+    @if(currentPage.getTotalRowCount == 0) {
+    
+        <div class="well">
+            <em>No dataset to display</em>
+        </div> 
+
+    } else {
+    
+	    <table class="table table-bordered table-striped table-condensed table-responsive">
+	    	<thead>
+	    		<tr>
+	    			@header("name","Name")
+	    			@header("code","Code")
+	    			@header("organization","Organization")
+	    			@header("collection","Collection")
+	    			@header("nbOriginalRecords","Number of records in dataset")
+	    			@header("nbRecords", "Number of records available")	
+	    			@header("administrativeContact", "Administrative Contact")
+	    			@if(admin) {
+	    			<th class="header">
+	    				Edit
+	    			</th>
+	    			}    			
+	    		</tr>
+	    	</thead>
+	        @for(dataset <- currentPage.getList) {
+	            <tr>
+	            	<td>
+	               		<a href="@routes.Datasets.showDataset(dataset.id)">@dataset.name</a><br>
+		                @if(dataset.description.length > 0) {
+	                	<p>@dataset.description</p>
+		                }
+	                </td>
+	                <td>
+	                	@dataset.code
+	                </td>
+	                <td>
+	                	@if(dataset.organization == null) {
+	                		<em>-</em>
+	                	} else {
+	                		@dataset.organization.name
+	                	}
+	                </td>
+	                <td>
+	                	@if(dataset.collection == null) {
+	                		<em>-</em>
+	                	} else {
+	                		@dataset.collection.name
+	                	}
+	                </td>	                
+	                <td>
+	                	@if(dataset.nbOriginalRecords != null && dataset.nbOriginalRecords > 0) {
+	                		@dataset.nbOriginalRecords
+	                	} else {
+	                		<em>-</em>
+	                	}
+	                </td>
+	                <td>
+	                	@if(dataset.nbRecords != null && dataset.nbRecords > 0) {
+	                		@dataset.nbRecords
+	                	}else {
+	                		<em>-</em>
+	                	}
+	                </td>
+	                <td>
+	                	@if(dataset.administrativeContact.length > 0) {
+	                		@dataset.administrativeContact<br />
+	                	}
+	                	<a href="mailto:@dataset.administrativeEmail">@dataset.administrativeEmail</a>
+	                </td>	                
+	                @if(admin) {
+	                <td>
+	                	<a href="@routes.Datasets.editDataset(dataset.id)"><img src="/assets/img/application_form_edit.png"></a>
+	                </td>
+	                }
+	            </tr>
+	        }
+	    </table>
+
+            <div id="pagination">
+                <ul class="pagination">
+                    @if(currentPage.hasPrev) {
+                        <li class="prev">
+                            <a href="@link(currentPage.getPageIndex - 1, null)">&larr; Previous</a>
+                        </li>
+                    } else {
+                        <li class="prev disabled">
+                            <a>&larr; Previous</a>
+                        </li>
+                    }
+                    <li class="current">
+                        <a>Displaying @currentPage.getDisplayXtoYofZ(" to "," of ")</a>
+                    </li>
+                    @if(currentPage.hasNext) {
+                        <li class="next">
+                            <a href="@link(currentPage.getPageIndex + 1, null)">Next &rarr;</a>
+                        </li>
+                    } else {
+                        <li class="next disabled">
+                            <a>Next &rarr;</a>
+                        </li>
+                    }
+                </ul>
+            </div>	
+	}
+    </div>
+}

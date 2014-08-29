@@ -1,0 +1,56 @@
+@(userForm: Form[User])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@main("Add a new user") {
+        <header>
+            <div class="container">
+                <div id="header-welcome" class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <h1>Add a new user</h1>
+                        <h2>&nbsp;</h2>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 lead">
+                        @if(session.get("email")) {
+			Welcome @session.get("email")  
+			 | <a href="@routes.Application.logout()">Logout</a>
+			} else {
+			<a href="@routes.Application.login()">Login</a>
+			}
+                    </div>
+                </div><!-- row -->
+            </div><!-- container -->
+        </header>
+
+        <div id="header-bottom-border">&nbsp;</div>	
+        <div class="container result-list"> 
+            
+   	@if(flash.containsKey("error")) {
+        <div class="alert-message error">
+            <strong>Oops!</strong> @flash.get("error")
+        </div>
+    }    
+    
+    @form(routes.Users.saveUser()) {
+
+    <fieldset>
+
+        @inputText(userForm("userName"), '_label -> "Username")
+        @inputText(userForm("email"), '_label -> "Email")
+        @inputText(userForm("confirmEmail"), '_label -> "Confirm Email")
+        @inputText(userForm("name"), '_label -> "Name")
+        @inputPassword(userForm("password"), '_label -> "Password")
+        @inputPassword(userForm("confirmPassword"), '_label -> "Confirm Password")
+		
+    </fieldset>
+    
+    <div class="actions">
+      <input type="submit" value="Save" class="btn primary"> or <a href="@routes.Datasets.datasets()" class="btn">Cancel</a>
+    </div>
+        
+    }
+        </div>   
+}
+    

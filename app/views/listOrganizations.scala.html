@@ -1,0 +1,147 @@
+@(currentPage: com.avaje.ebean.Page[Organization], currentSortBy: String, currentOrder: String, currentFilter: String, admin: Boolean)
+
+@import helper._
+@import myHelpers._
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.Organizations.organizations(newPage, sortBy, order, currentFilter)
+    
+}
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
+        <a href="@link(0, key)">@title</a>
+    </th>
+}
+
+@main("Organization list") {
+        @bandeau(currentPage.getTotalRowCount + " organization(s)")
+
+        <div class="container result-list">
+            @menu(admin)
+            <br>
+	    @if(flash.containsKey("success")) {
+	        <div class="alert alert-warning">
+	            <strong>Done!</strong> @flash.get("success")
+	        </div>
+	    } else { 
+	    	@if(flash.containsKey("error")) {
+		        <div class="alert alert-error">
+		            <strong>Oops!</strong> @flash.get("error")
+		        </div>
+		    }
+	    }     
+
+    <div id="actions">
+        
+        <form action="@link(0, "name")" method="GET">
+            <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by organization name...">
+            <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary">
+        </form>
+        @if(admin) {
+        <p><a class="btn btn-success" id="add" href="@routes.Organizations.newOrganization()">Add a new organization</a></p>
+        }
+    </div>	
+
+    @if(currentPage.getTotalRowCount == 0) {
+    
+        <div class="well">
+            <em>No organization to display</em>
+        </div> 
+
+    } else {
+    
+    	<table class="table table-bordered table-striped table-condensed table-responsive">
+	    	<thead>
+	    		<tr>
+	    			@header("name","Name")
+	    			@header("administrativeContact", "Administrative Contact")
+	    			@header("technicalContact", "Technical Contact")
+	    			@if(admin){
+	    			<th class="header">Edit</th>
+	    			}
+	    		</tr>
+	    	</thead>
+	        @for(organization <- currentPage.getList) {
+	            <tr>
+	            	<td>
+		                <a href="@routes.Organizations.showOrganization(organization.id)">@organization.name</a><br />
+	                	@organization.city
+	                	@if(organization.city.length>0 && organization.country.length>0) {
+	                		,&nbsp;
+	                	}
+	                	@organization.country
+	                </td>
+	                <td>
+	                	@if(organization.administrativeContact.length > 0) {
+	                		@organization.administrativeContact<br />
+	                	}
+	                	<a href="mailto:@organization.administrativeEmail">@organization.administrativeEmail</a>
+	                </td>
+	                <td>
+	                	@if(organization.technicalContact.length > 0) {
+	                		@organization.technicalContact<br />
+	                	}
+	                	<a href="mailto:@organization.technicalEmail">@organization.technicalEmail</a>
+	                </td>
+	                @if(admin){
+	                <td>
+	                	<a href="@routes.Organizations.editOrganization(organization.id)"><img src="/assets/img/application_form_edit.png"></a>
+	                </td>
+	                }
+	            </tr>
+	        }
+	    </table>
+
+        <div id="pagination">
+            <ul class="pagination">
+                @if(currentPage.hasPrev) {
+                    <li class="prev">
+                        <a href="@link(currentPage.getPageIndex - 1, null)">&larr; Previous</a>
+                    </li>
+                } else {
+                    <li class="prev disabled">
+                        <a>&larr; Previous</a>
+                    </li>
+                }
+                <li class="current">
+                    <a>Displaying @currentPage.getDisplayXtoYofZ(" to "," of ")</a>
+                </li>
+                @if(currentPage.hasNext) {
+                    <li class="next">
+                        <a href="@link(currentPage.getPageIndex + 1, null)">Next &rarr;</a>
+                    </li>
+                } else {
+                    <li class="next disabled">
+                        <a>Next &rarr;</a>
+                    </li>
+                }
+            </ul>
+        </div>	    
+    
+    }
+    </div>
+}

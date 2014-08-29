@@ -1,0 +1,62 @@
+@(id: Long, organizationForm: Form[Organization], organization: Organization, admin: Boolean)
+
+@import helper._
+@import myHelpers._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@title = @{if(id != null) {
+			"Edit an organization"
+		} else {
+			"Create an organization"
+		}}
+		
+@main(title) {
+        @bandeau(title)
+        
+        <div class="container result-list">
+            @menu(admin)
+    
+    @form(if(id != null) {    
+    		routes.Organizations.updateOrganization(id)
+    	} else {
+    		routes.Organizations.saveOrganization()
+    	}) {
+
+    <fieldset>
+        
+        @inputText(organizationForm("name"), '_label -> "Name", 'class -> "form-control")
+        @inputText(organizationForm("gbrdsID"), '_label -> "GBIF ID", 'class -> "form-control")
+        @inputText(organizationForm("bciID"), '_label -> "GRBIO LSID", 'class -> "form-control")
+        @inputText(organizationForm("address"), '_label -> "Address", 'class -> "form-control")
+        @inputText(organizationForm("postBox"), '_label -> "Post Box", 'class -> "form-control")
+        @inputText(organizationForm("postCode"), '_label -> "Post Code", 'class -> "form-control")
+        @inputText(organizationForm("city"), '_label -> "City", 'class -> "form-control")
+        @inputText(organizationForm("country"), '_label -> "Country", 'class -> "form-control")
+        @inputText(organizationForm("webUrl"), '_label -> "Home page", 'class -> "form-control")
+        @inputText(organizationForm("administrativeContact"), '_label -> "Administrative Contact", 'class -> "form-control")
+        @input(organizationForm("administrativeEmail"), '_label -> "Administrative Email", 'class -> "form-control"){ (id, name, value, args) =>
+			<input type="email" name="@name" id="@id" value="@value" @toHtmlArgs(args)>
+		} 
+        @inputText(organizationForm("technicalContact"), '_label -> "Technical Contact", 'class -> "form-control")
+        @input(organizationForm("technicalEmail"), '_label -> "Technical Email", 'class -> "form-control"){ (id, name, value, args) =>
+			<input type="email" name="@name" id="@id" value="@value" @toHtmlArgs(args)>
+		} 
+
+    </fieldset>
+
+    <div class="actions">
+      <input type="submit" value="Save" class="btn btn-primary"> or <a href="@routes.Organizations.organizations()" class="btn btn-default">Cancel</a>
+    </div>
+        
+    }
+    
+    @if(id != null) {
+    	<p class="journal">Created: @organization.creationDate. Updated: @organization.updateDate.
+    	@form(routes.Organizations.deleteOrganization(id), 'class -> "topRight") {
+        <input type="submit" value="Delete this organization" class="btn btn-danger" onclick="return confirm('Are you sure?')">
+    	} 
+        </p>
+    }
+     </div>
+}

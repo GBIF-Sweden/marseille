@@ -1,0 +1,45 @@
+@(datasets: List[Dataset], datasetForm: Form[Dataset])
+
+@import helper._
+
+@main("Dataset list") {
+    
+    <h1>@datasets.size() dataset(s)</h1>
+    
+    <ul>
+        @for(dataset <- datasets) {
+            <li>
+                @dataset.name
+                
+                @form(routes.Datasets.deleteDataset(dataset.id)) {
+                    <input type="submit" value="Delete">
+                }
+            </li>
+        }
+    </ul>
+    
+    <h2>Add a new dataset</h2>
+    
+    @form(routes.Datasets.newDataset()) {
+        
+        @inputText(datasetForm("code")) 
+        @inputText(datasetForm("name")) 
+        @inputText(datasetForm("webUrl")) 
+        @inputText(datasetForm("wsUrl")) 
+        @textarea(datasetForm("description")) 
+        @inputText(datasetForm("encoding"))
+        @inputText(datasetForm("metaNbSpecimens"))
+        @inputText(datasetForm("metaNbDigitizedSpecimens"))
+        @inputText(datasetForm("metaNbObjects"))
+        @inputText(datasetForm("metaNbDigitizedObjects"))
+        @inputText(datasetForm("organization"))
+        @inputText(datasetForm("orgAddress"))
+        @inputText(datasetForm("orgCountry"))
+        @inputText(datasetForm("orgContact"))
+        @inputText(datasetForm("orgContactEmail"))
+    
+        <input type="submit" value="Create">
+        
+    }
+    
+}

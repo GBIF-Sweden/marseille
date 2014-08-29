@@ -1,0 +1,37 @@
+@(collectio: Collectio, admin: Boolean)
+
+@import helper._
+@import myHelpers._
+
+@********************************
+ * Helper generating table rows *
+ ********************************@
+ 
+@main(collectio.name) {
+        @bandeau(collectio.name)
+
+        <div class="container result-list">
+            @menu(admin)
+            <br>
+	@if(admin) {
+	<a class="btn success topRight" id="edit" href="@routes.Collectiones.editCollectio(collectio.id)">Edit this collection</a>
+	}	
+	<table class="table table-bordered table-striped table-condensed table-responsive">
+		@row("Institution / Organization", "organization", if(collectio.organization != null) collectio.organization.name else "-")
+		@rowLink("Home page", "homepage", collectio.webUrl, collectio.webUrl)
+		@rowLink("Biodiversity Collections Index ID","bciid","http://biocol.org/"+collectio.bciID,collectio.bciID)
+		@row("Description", "description", collectio.description)
+		@row("Estimated number of specimens","nbspecimens",collectio.numberSpecimens.toString())
+		@row("Estimate number of digitized specimens", "nbdigitizedspecimens",collectio.numberDigitizedSpecimens.toString())
+		@row("Estimated number of objects", "nbobjects", collectio.numberObjects.toString())
+		@row("Estimated number of digitized objects", "nbdigitizedobjects", collectio.numberDigitizedObjects.toString())
+		@row("Start year", "startyear", collectio.earliestYear.toString())
+		@row("End year", "endyear", collectio.latestYear.toString())
+		@row("Expeditions' specimens in the collection", "expeditions", collectio.expeditions)
+		@row("Remarkable contributors to the collection", "contributors", collectio.remarkablePersons)
+		@row("Administrative contact", "contact", collectio.administrativeContact)
+		@rowLink("Administrative email", "email", "mailto:"+collectio.administrativeEmail, collectio.administrativeEmail)
+	</table>	
+	<p class="journal">Created: @collectio.creationDate. Updated: @collectio.updateDate.</p>
+        </div>
+}
